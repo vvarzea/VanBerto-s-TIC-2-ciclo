@@ -74,6 +74,8 @@ body{
 .grp::after{content:'▾';font-size:1.1em;padding-left:4px;}
 .grp[aria-expanded="false"]::after{content:'▸';}
 .game.gh{display:none;}
+#dipPrint{display:none}
+@media print{body.pdip>*{display:none!important}body.pdip>#dipPrint{display:block!important}#dipPrint img{width:100%}@page{size:A4 landscape;margin:8mm}}
 .game{
   --gc:#fff;--gg:rgba(255,255,255,.3);
   position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:6px;
@@ -186,9 +188,10 @@ body.playing .vb-free{--vbw:clamp(54px,14vw,72px);}
   <header class="hero">
    <div class="hero-icon em" aria-hidden="true">💻</div>
    <h1 class="title">Quiz de Informática</h1>
-   <p class="sub">Aprende a brincar • Escolhe o teu tema</p>
+   <p class="sub">2.º Ciclo • Aprende a brincar • Escolhe o teu tema</p>
    <div class="hero-stats"><span class="stat-badge">💻 Informática</span><span class="stat-badge">🛡️ Segurança</span><span class="stat-badge">🌿 Saúde Digital</span><span class="stat-badge" id="stat">⭐ 0 / 24</span></div>
    <button class="resume on" id="sur">🎲 Desafio surpresa <small>10 perguntas à sorte</small></button>
+   <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px"><button class="btn" id="lvl"></button><button class="btn" id="who"></button></div>
   </header>
   <section class="games"><div class="games-label">🎮 Escolhe o teu tema</div><div class="grid" id="grid"></div></section>
   <div style="text-align:center;padding:0 0 16px"><button class="btn" id="cfg">⚙️ Ajudas</button></div>
@@ -362,7 +365,7 @@ function vbFrame(blink,step,armsUp){
 const TOPICS = [
 
 ["📜", "⌛💻📜", "História da Informática", [
-["⌛ Quem é considerado o 'pai da computação'?","🧠 Alan Turing","🎨 Pablo Picasso","⚽ Cristiano Ronaldo","🎼 Mozart"],
+["⌛ Quem desenhou a «Máquina Analítica», o primeiro projeto de um computador programável?", "⚙️ Charles Babbage", "🔬 Albert Einstein", "🧪 Marie Curie", "📡 Alexander Bell", "Charles Babbage desenhou a Máquina Analítica no século XIX; Ada Lovelace escreveu o primeiro programa para ela.", 2],
 ["🧮 Qual foi uma das primeiras máquinas de calcular da história?","🧮 O Ábaco","📺 O Televisor","📻 O Rádio","🚲 A Bicicleta"],
 ["👩‍💻 Quem foi a primeira programadora do mundo?","👩‍🔬 Ada Lovelace","👑 Rainha Isabel","🎤 Ariana Grande","🌍 Marie Curie"],
 ["🖥️ Como eram os primeiros computadores?","📦 Muito grandes e ocupavam salas inteiras","📱 Do tamanho de um telemóvel","🎮 Consolas de jogos","📺 Pequenas televisões"],
@@ -374,18 +377,7 @@ const TOPICS = [
 ["🚀 Qual é uma grande tendência atual da informática?","🤖 Inteligência Artificial","⚱️ Vasos antigos","🍩 Donuts gigantes","🖼️ Pinturas manuais"]
 ]],
 
-["🛡️", "🛡️🔐💻", "Segurança na Internet", [
-["🎣 O que é phishing?","🎣 Roubar dados com mensagens falsas","😂 Enviar piadas online","🎮 Criar jogos na internet","🛠️ Reparar computadores"],
-["🔐 Qual é uma palavra-passe segura?","🔐 Letras, números e símbolos misturados","😬 123456","🐶 O nome do teu cão","🎂 A tua data de nascimento"],
-["🎭 Porque é perigoso falar com desconhecidos online?","🎭 Podem não ser quem dizem","👍 Dão poucos likes","🤪 Usam emojis estranhos","🎮 Não jogam contigo"],
-["🔒 Como sabes que um site é seguro?","🔒 Começa por https:// e tem cadeado","🌈 Tem muitas cores","🐌 Abre devagar","😂 Mostra anúncios engraçados"],
-["📍 Porque não deves partilhar a tua localização?","📍 Outros podem saber onde estás","🔋 Gasta bateria","😴 Fica chato","🔔 Dá mais notificações"],
-["🛡️ O que deves fazer se receberes uma mensagem estranha?","🗑️ Ignorar e apagar","😅 Responder logo","📤 Enviar para todos os amigos","🤔 Clicar no link para ver"],
-["💬 O que deves fazer se alguém te chatear online?","👩‍🏫 Contar a um adulto","❌ Apagar a conta","💢 Começar a discutir","😡 Responder insultando"],
-["📸 O que NÃO deves partilhar nas redes sociais?","🏫 Dados pessoais como morada ou escola","🦄 Fotos com filtros","😊 Selfies com amigos","🐱 Imagens de animais fofos"],
-["🤖 Para que serve um antivírus?","🛡️ Para proteger contra vírus e ameaças","🎀 Para decorar o computador","🌈 Para deixar o PC mais colorido","🎮 Para fazer jogos correrem melhor"],
-["🔍 O que deves fazer antes de clicar num link?","👩‍🏫 Perguntar a um adulto se não tiveres a certeza","🤷‍♂️ Clicar sem pensar","⚡ Clicar rápido para abrir logo","📤 Enviar o link a amigos"]
-]],
+["🛡️", "🛡️🔐💻", "Segurança na Internet", [["🎣 O que é o phishing?", "🎣 Mensagens falsas que tentam roubar os teus dados", "📧 Publicidade enviada por uma loja conhecida", "🦠 Um vírus que apaga ficheiros", "🔔 Um aviso de atualização do jogo", "O phishing finge ser uma empresa ou pessoa de confiança para te levar a dar palavras-passe ou dados.", 1], ["🔐 Qual é a palavra-passe mais segura?", "🔐 Vr9!Lua_Pipoca7", "🔢 12345678", "🎂 JoaoSilva2013", "🐶 Bolinhas", "Uma palavra-passe forte é longa e mistura letras, números e símbolos, sem dados que outros adivinhem.", 1], ["🔒 O que indicam o https:// e o cadeado no endereço de um site?", "🔒 Que a ligação é cifrada", "✅ Que o site é sempre de confiança", "🏆 Que o site é oficial da escola", "⚡ Que o site é rápido", "A ligação é cifrada, mas um site falso também pode ter cadeado: confirma sempre o endereço.", 2], ["🎭 Um «amigo» de um jogo online que nunca viste pede-te a morada. O que fazes?", "🛑 Não respondes e contas a um adulto", "📍 Dás só o nome da rua", "🤝 Dás, porque jogam juntos há semanas", "🎁 Dás para receber uma prenda", "Online ninguém prova quem é. Nunca partilhes a morada e avisa um adulto.", 1], ["📍 Porque não deves publicar a localização em tempo real?", "🏠 Mostra onde estás e quando a casa está vazia", "🔋 Gasta a bateria", "📶 Deixa a Internet lenta", "🎨 Muda as cores do telemóvel", "Quem vê a publicação fica a saber onde estás. Partilha só depois de saíres do local.", 2], ["📩 Recebes «Ganhaste um telemóvel! Clica já!». O que fazes?", "🗑️ Não clicas, apagas e avisas um adulto", "🔗 Clicas depressa para não perder", "📤 Reenvias aos amigos", "🧾 Respondes com o teu nome completo", "Prémios inesperados e pressa são sinais de burla. Clicar pode instalar vírus ou roubar dados.", 1], ["🛡️ Para que serve um antivírus?", "🛡️ Procura e bloqueia programas maliciosos", "📈 Aumenta a velocidade da Internet", "🧹 Apaga ficheiros que já não usas", "🔑 Cria palavras-passe novas", "O antivírus analisa o dispositivo e deteta programas maliciosos, mas não substitui o teu cuidado.", 1], ["🔗 Antes de clicares num link recebido numa mensagem, deves…", "🔍 Confirmar o endereço e só confiar se conheceres quem enviou", "⚡ Clicar logo se tiver emojis simpáticos", "👍 Clicar se tiver muitos gostos", "📱 Clicar se vier de um número desconhecido", "Um link pode esconder um site falso. Confirma o endereço ou pergunta a um adulto.", 2], ["🔁 Porque é má ideia usar a mesma palavra-passe em todas as contas?", "🔓 Se descobrirem uma, entram em todas", "🐢 O computador fica mais lento", "🧠 Ocupa muita memória", "📵 A conta é bloqueada", "Se uma palavra-passe for roubada, os piratas testam-na nas outras contas.", 2], ["🧑‍💻 Como podes proteger melhor a tua conta numa rede social?", "⚙️ Pôr o perfil privado e rever quem te segue", "📣 Aceitar todos os pedidos", "🖼️ Usar uma foto com o uniforme da escola", "📛 Escrever a morada na biografia", "Um perfil privado deixa-te escolher quem vê o que publicas.", 1], ["🪪 Que dados NÃO deves partilhar online?", "🏠 Morada e número de telemóvel", "🎨 O teu desenho favorito", "🎵 A tua música preferida", "📚 O teu livro preferido", "Morada e telefone permitem localizar-te ou contactar-te.", 1], ["🔄 Porque é importante atualizar o telemóvel e as aplicações?", "🛠️ Corrigem falhas de segurança", "🎨 Só mudam os ícones", "📉 Servem para gastar dados", "🔊 Deixam o som mais alto", "As atualizações tapam falhas que os piratas podiam usar.", 2], ["☕ Estás num café com Wi-Fi gratuito. O que deves evitar?", "🏦 Entrar em contas importantes ou dar dados pessoais", "📖 Ler as notícias", "🗺️ Ver um mapa", "🎵 Ouvir música", "Redes públicas podem ser espiadas: evita introduzir palavras-passe ou dados sensíveis.", 2], ["👤 Recebes um pedido de alguém que não conheces, mas com amigos em comum. O que fazes?", "🤔 Perguntas aos amigos e, se não o conheces, recusas", "✅ Aceitas, porque tem amigos em comum", "📨 Aceitas e dás-lhe o teu número", "🕵️ Aceitas para descobrir quem é", "Ter amigos em comum não prova quem é a pessoa. Se não a conheces, recusa.", 2], ["😟 Vês algo online que te deixa desconfortável. O melhor é…", "🧑‍🏫 Falar com um adulto de confiança", "🙈 Guardar segredo", "📤 Mostrar aos colegas", "🔁 Ver de novo para perceber", "Falar com um adulto ajuda a resolver e a proteger-te. Não estás sozinho.", 1], ["📧 Qual é um sinal de um e-mail de phishing?", "⏰ Pede urgência e dados pessoais", "🏫 Vem de um professor que conheces", "📅 Confirma uma reunião marcada por ti", "📎 Não tem anexos nem links", "Pressa e pedidos de dados pessoais são sinais clássicos de phishing.", 1]]],
 
 ["🔐", "🛡️🔐🌐", "Cibersegurança", [
 ["🛡️ O que é cibersegurança?","🔐 Proteger computadores e dados online","🎨 Criar desenhos no computador","🎵 Ouvir música na Internet","📦 Guardar caixas digitais"],
@@ -715,16 +707,16 @@ function togG(l){const k=+l.dataset.k;OPEN=OPEN===k?-1:k;try{localStorage.setIte
 
 function hub(){M.hidden=true;P.hidden=true;H.hidden=false;try{speechSynthesis.cancel();}catch(e){}
  let n=0;
- const card=(t,i,hid)=>{const b=B[t[2]],m=t[3].length;if(b!==undefined)n++;
+ const card=(t,i,hid)=>{const b=B[t[2]],m=Math.min(10,t[3].length);if(b!==undefined)n++;
   return '<div class="game'+(hid?' gh':'')+'" role="button" tabindex="0" data-i="'+i+'" data-g="'+gi_(t[2])+'" style="--gc:'+COLORS[i%8]+';--i:'+i+'"><div class="bubble">'+t[0]+'</div><div class="name">'+t[2]+'</div><div class="desc">'+(DESC[t[2]]||'')+'</div>'+(b!==undefined?'<div class="prog"><div class="prog-bar"><i style="width:'+b/m*100+'%"></i></div><div class="prog-txt'+(b>=m?' done':'')+'">⭐ '+b+'/'+m+'</div></div>':'')+'<div class="play">▶ Jogar</div></div>';};
  $('#grid').innerHTML=GROUPS.map((g,k)=>{const L=TOPICS.map((t,i)=>[t,i]).filter(x=>g.t.includes(x[0][2]));
   const open=OPEN===k,done=L.filter(x=>B[x[0][2]]!==undefined).length;
   return '<div class="grp" role="button" tabindex="0" data-k="'+k+'" aria-expanded="'+open+'" style="--gc:'+g.c+'"><span class="gi">'+g.e+'</span><span class="gt">'+g.n+'</span><span class="gn">⭐ '+done+'/'+L.length+'</span></div>'+L.map(x=>card(x[0],x[1],!open)).join('');}).join('');
  $('#stat').textContent='⭐ '+n+' / '+TOPICS.length;
- vb('Escolhe um tema e vamos jogar! 🎮');}
+ vb('Escolhe um tema e vamos jogar! 🎮');paintTop();if(!NAME)nameModal();}
 
 /* === JOGO === */
-function start(t,col){G=t;G.col=col;deck=t[3].map(q=>({q:q[0],o:sh(q.slice(1).map((x,i)=>({t:x,ok:i===0})))}));qi=0;score=0;
+function start(t,col){G=t;G.col=col;deck=pickQ(t[3]).map(q=>({q:q[0],e:q[5]||'',o:sh(q.slice(1,5).map((x,i)=>({t:x,ok:i===0})))}));qi=0;score=0;
  H.hidden=true;M.hidden=true;P.hidden=false;P.style.setProperty('--pc',col);
  P.innerHTML='<div class="bar"><button class="btn" id="bk" aria-label="Voltar ao menu">←</button><div class="ttl">'+t[0]+' '+t[2]+'</div><button class="btn" id="mu" aria-label="Sons">'+(snd?'🔊':'🔇')+'</button></div><div class="pips" id="pips"></div><div class="pbody"><div class="qq" id="qt"></div><div class="qo2" id="qo"></div><div class="fb" id="fb" aria-live="polite"></div><div class="opts"><button class="btn big" id="nx" disabled>Próxima →</button></div><div class="sc" id="sc"></div></div><div class="footer"><span>© Prof.ª Vanda Várzea</span><span>💻 VanBerto\'s</span></div>';
  scrollTo(0,0);load();}
@@ -738,17 +730,51 @@ function load(){const q=deck[qi];lock=0;$('#qt').textContent=q.q;$('#fb').textCo
   b.className='o';b.dataset.i=i;e.className='eo';e.textContent=em;s.textContent=tx;b.append(e,s);box.append(b);});
  pips();sc();say(q.q);vb(qi==0?'Lê com atenção e escolhe! 👆':pick(['Vamos a essa! 💪','Pensa bem! 🤔','Tu consegues! 🌟']));}
 function ans(o){const q=deck[qi];
- if(q.o[+o.dataset.i].ok){lock=1;o.classList.add('right');score++;sOk();$('#fb').textContent='✔️ Muito bem!';
+ if(q.o[+o.dataset.i].ok){lock=1;o.classList.add('right');score++;sOk();$('#fb').textContent='✔️ Muito bem!'+(q.e?' 💡 '+q.e:'');
   $('#qo').querySelectorAll('.o').forEach(b=>b.disabled=true);$('#nx').disabled=false;vb(pick(OK),'happy');pips();}
  else{o.classList.add('bad');o.disabled=true;score=Math.max(0,score-1);sBad();$('#fb').textContent='❌ Não é essa. Tenta outra vez!';shake(o);vb(pick(ERR));}
  sc();}
 function end(){const n=deck.length;B[G[2]]=Math.max(score,B[G[2]]===undefined?0:B[G[2]]);try{localStorage.setItem('vbq',JSON.stringify(B));}catch(e){}
- const s=score>=n*.9?3:score>=n*.6?2:1;fx();sWin();vb('Fantástico! Terminaste! 🎉','happy');
- modal('<h2>🏁 Fim!</h2><p>Pontuação: '+score+' / '+n+'</p><div class="rc"><span>'+'⭐'.repeat(s)+'</span></div><div class="opts"><button class="btn big" id="ag">🔁 Recomeçar</button><button class="btn big" id="mn">📚 Escolher outro tema</button></div>');}
+ const s=score>=n*.9?3:score>=n*.6?2:1;LAST={sc:score,n:n,s:s};fx();sWin();vb('Fantástico! Terminaste! 🎉','happy');
+ modal('<h2>🏁 Fim!</h2><p>Pontuação: '+score+' / '+n+'</p><div class="rc"><span>'+'⭐'.repeat(s)+'</span></div><div class="opts">'+(score>=n*.6?'<button class="btn big" id="dp">🎓 Diploma</button>':'')+'<button class="btn big" id="ag">🔁 Recomeçar</button><button class="btn big" id="mn">📚 Escolher outro tema</button></div>');}
 
 /* === AJUDAS === */
 function cfgModal(){const T=[['snd','🔊 Sons do jogo',snd],['speak','🗣️ Ler as perguntas em voz alta',speak],['calm','🌿 Modo calmo (sem confetis nem abanões)',O.calm],['big','🔠 Letras e imagens maiores',O.big]];
  modal('<h2 style="font-size:30px">⚙️ Ajudas</h2><p>O professor escolhe o que ajuda o aluno.</p><div class="opts">'+T.map(([k,l,v])=>'<button class="btn big" data-o="'+k+'" aria-pressed="'+v+'" style="width:100%;'+(v?'':'background:#fff')+'">'+(v?'✅ ':'⬜ ')+l+'</button>').join('')+'<button class="btn big" id="mn2">Fechar</button></div>');}
+
+
+/* === NÍVEL, NOME E DIPLOMA === */
+let LV='F',NAME='',LAST=null,ENDH='',PEND=0;
+try{LV=localStorage.getItem('vbqd')==='D'?'D':'F';NAME=localStorage.getItem('vbqn')||'';}catch(e){}
+function pickQ(list){const w=LV==='D'?2:1,a=sh(list);a.sort((x,y)=>((y[6]||1)===w)-((x[6]||1)===w));return sh(a.slice(0,10));}
+const esc=v=>String(v).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function paintTop(){$('#lvl').textContent=LV==='D'?'🔥 Nível: Desafio':'🌱 Nível: Fácil';$('#who').textContent=NAME?'👤 '+NAME:'👤 Escrever o meu nome';}
+function nameModal(){modal('<h2>👋 Como te chamas?</h2><p>O teu nome aparece no diploma.</p><input id="nmi" maxlength="30" placeholder="O teu nome" value="'+esc(NAME)+'" style="font:inherit;font-size:20px;padding:10px 14px;border:3px solid var(--ink);border-radius:16px;width:100%;box-sizing:border-box;text-align:center"><div class="opts"><button class="btn big" id="nmok">✔️ Continuar</button></div>');setTimeout(()=>{const i=$('#nmi');i&&i.focus();},50);}
+function okName(){const v=$('#nmi').value.trim();if(!v){$('#nmi').focus();return;}NAME=v;try{localStorage.setItem('vbqn',v);}catch(e){}M.hidden=true;paintTop();if(PEND){PEND=0;showDip();}}
+function dipImg(){const W=1200,H=850,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d'),INK='#1e1b4b',col=G.col||'#7c3aed';
+ x.fillStyle='#fff8e7';x.fillRect(0,0,W,H);x.lineWidth=14;x.strokeStyle=INK;x.strokeRect(30,30,W-60,H-60);x.lineWidth=8;x.strokeStyle=col;x.strokeRect(52,52,W-104,H-104);
+ x.textAlign='center';x.fillStyle=INK;x.font='86px "Fredoka One"';x.fillText('🎓 DIPLOMA',W/2,175);
+ x.font='34px "Fredoka One"';x.fillText("O VanBerto's atesta que",W/2,250);
+ let f=100;do{x.font=f+'px "Fredoka One"';f-=4;}while(x.measureText(NAME).width>900&&f>30);x.fillStyle=col;x.fillText(NAME,W/2,365);
+ x.fillStyle=INK;x.fillRect(W/2-380,385,760,4);
+ x.font='34px "Fredoka One"';x.fillText('concluiu o quiz do 2.º Ciclo — nível '+(LV==='D'?'Desafio':'Fácil'),W/2,450);
+ x.font='60px "Fredoka One"';x.fillText(G[0]+' '+G[2],W/2,535);
+ x.font='44px "Fredoka One"';x.fillText('Pontuação: '+LAST.sc+' / '+LAST.n+'  '+'⭐'.repeat(LAST.s),W/2,615);
+ try{x.drawImage(vbFrame(false,-1,true),70,540,230,230);}catch(e){}
+ x.font='30px "Fredoka One"';x.fillText(new Date().toLocaleDateString('pt-PT',{day:'numeric',month:'long',year:'numeric'}),W/2,745);
+ x.fillRect(W-420,725,300,3);x.font='32px "Fredoka One"';x.fillText('Prof.ª Vanda Várzea',W-270,765);
+ return c.toDataURL('image/png');}
+function showDip(){if(!NAME){PEND=1;return nameModal();}ENDH=ENDH||M.innerHTML;const u=dipImg();
+ modal('<h2>🎓 O teu diploma</h2><img id="dipimg" alt="Diploma" src="'+u+'" style="max-width:100%;border:3px solid var(--ink);border-radius:12px"><div class="opts"><button class="btn big" id="dpr">🖨️ Imprimir</button><button class="btn big" id="dsv">💾 Guardar imagem</button><button class="btn big" id="dbk">← Voltar</button></div>');}
+$('#lvl').addEventListener('click',()=>{LV=LV==='D'?'F':'D';try{localStorage.setItem('vbqd',LV);}catch(e){}paintTop();});
+$('#who').addEventListener('click',nameModal);
+M.addEventListener('click',e=>{const t=e.target;
+ if(t.closest('#nmok'))return okName();
+ if(t.closest('#dp')){ENDH=M.innerHTML;return showDip();}
+ if(t.closest('#dbk')){M.innerHTML=ENDH;return;}
+ if(t.closest('#dsv')){const a=document.createElement('a');a.href=$('#dipimg').src;a.download='Diploma-'+NAME.replace(/\s+/g,'_')+'.png';a.click();return;}
+ if(t.closest('#dpr')){let d=$('#dipPrint');if(!d){d=document.createElement('div');d.id='dipPrint';document.body.append(d);}d.innerHTML='<img src="'+$('#dipimg').src+'">';document.body.classList.add('pdip');setTimeout(()=>{print();setTimeout(()=>document.body.classList.remove('pdip'),400);},100);}});
+M.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='nmi')okName();});
 
 $('#cfg').addEventListener('click',cfgModal);
 $('#sur').addEventListener('click',startSur);
